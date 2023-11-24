@@ -1,0 +1,35 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #9b59b6;
+}
+
+.main-box {
+    width: 450px;
+    background: #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: large;
+    margin-right: 25px;
+    padding: 20px;
+}
+
+.main-box ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.main-box .map li {
+    margin-top: 30px;
+}
+
+.main-box ul li {
+    width: calc(100% / 11);
+}
+
+.map {
+    padding-right: 40px;
+}

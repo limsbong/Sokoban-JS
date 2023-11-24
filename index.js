@@ -1,81 +1,94 @@
-const checkValue = (mapData) => {
-    let emptyPlace = 0;
-    let hall = 0;
-    let ball = 0;
-    let player = 0;
-    let wall = 0;
+const renderMap = () => {
+    const mapBox = document.querySelector(".map");
+    mapBox.innerHTML = "";
 
-    for (let i = 0; i < mapData.length; i++) {
-        if (mapData[i] === "#") {
-            wall++;
-        } else if (mapData[i] === "O") {
-            hall++;
-        } else if (mapData[i] === "o") {
-            ball++;
-        } else if (mapData[i] === " ") {
-            emptyPlace++;
-        } else {
-            player++
+    for (let i = 0; i < 77; i++) {
+        const addMapList = document.createElement("li");
+        const mapDataNode = document.createTextNode(map[i]);
+        addMapList.appendChild(mapDataNode);
+        mapBox.appendChild(addMapList);
+    }
+}
+
+const movePlayer = (playerIdx, emptyIdx) => {
+    const temp = map[playerIdx];
+    map.splice(playerIdx, 1, map[emptyIdx]);
+    map.splice(emptyIdx, 1, temp);
+}
+
+const checkUpLocation = () => {
+    const playerIdx = map.indexOf("P");
+    const emptyIdx = playerIdx - 11;
+
+    if (map[emptyIdx] === " ") {
+        movePlayer(playerIdx, emptyIdx)
+    } else {
+        alert("(경고!) 해당 명령을 수행할 수 없습니다!")
+    }
+}
+
+const checkRightLocation = () => {
+    const playerIdx = map.indexOf("P");
+    const emptyIdx = playerIdx + 1;
+
+    if (map[emptyIdx] === " ") {
+        movePlayer(playerIdx, emptyIdx)
+    } else {
+        alert("(경고!) 해당 명령을 수행할 수 없습니다!")
+    }
+}
+
+const checkLeftLocation = () => {
+    const playerIdx = map.indexOf("P");
+    const emptyIdx = playerIdx - 1;
+
+    if (map[emptyIdx] === " ") {
+        movePlayer(playerIdx, emptyIdx)
+    } else {
+        alert("(경고!) 해당 명령을 수행할 수 없습니다!")
+    }
+}
+
+const checkDownLocation = () => {
+    const playerIdx = map.indexOf("P");
+    const emptyIdx = playerIdx + 11;
+
+    if (map[emptyIdx] === " ") {
+        movePlayer(playerIdx, emptyIdx)
+    } else {
+        alert("(경고!) 해당 명령을 수행할 수 없습니다!")
+    }
+}
+
+const startGame = () => {
+    renderMap();
+
+    const keyDownHandler = (event) => {
+        if (event.key === "ArrowUp") {
+            checkUpLocation();
+            renderMap()
+        } else if (event.key === "ArrowRight") {
+            checkRightLocation();
+            renderMap()
+        } else if (event.key === "ArrowLeft") {
+            checkLeftLocation();
+            renderMap()
+        } else if (event.key == "ArrowDown") {
+            checkDownLocation();
+            renderMap()
         }
     }
-    return {
-        emptyPlace,
-        hall,
-        ball,
-        player,
-        wall
-    }
+    document.addEventListener("keydown", keyDownHandler);
 }
 
-const readMap = (map) => {
-    const mapDataArray = [];
-    map.forEach(mapLine => {
-        const mapData = mapLine[0].split("");
-        mapData.forEach(cur => {
-            mapDataArray.push(cur);
-        })
-    });
-    return mapDataArray;
-};
+const map = [
+    " ", " ", "#", "#", "#", "#", "#", "#", "#", " ", " ",
+    "#", "#", "#", " ", " ", "O", " ", " ", "#", "#", "#",
+    "#", " ", " ", " ", " ", "o", " ", " ", " ", " ", "#",
+    "#", " ", "O", "o", " ", "P", " ", "o", "O", " ", "#",
+    "#", "#", "#", " ", " ", "o", " ", " ", "#", "#", "#",
+    " ", "#", " ", " ", " ", "O", " ", " ", "#", " ", " ",
+    " ", "#", "#", "#", "#", "#", "#", "#", "#", " ", " "
+];
 
-const renderMap = (map, mapInfo, playerLocation) => {
-    map.forEach(cur => {
-        console.log(cur)
-    })
-    console.log(`Stage ${stage}`)
-    console.log(`가로크기: ${map[0][0].split("").length}`)
-    console.log(`세로크기: ${map.length}`)
-    console.log(`구멍의 수: ${mapInfo.hall}`)
-    console.log(`구멍의 수: ${mapInfo.ball}`)
-    console.log(`플레이어 위치: ${playerLocation.column}행 ${playerLocation.row}열`)
-}
-
-const getPlayerLocation = (map) => {
-    let row = 0;
-    let column = 0;
-
-    for (let i = 0; i < map.length; i++) {
-        const mapLine = map[i][0];
-        for (let j = 0; j < mapLine.length; j++) {
-            if (mapLine[j] === "P") {
-                row = j + 1;
-                column = i + 1;
-            }
-        }
-    }
-    return { row, column };
-}
-
-const main = (map) => {
-    stage++
-    const playerLocation = getPlayerLocation(map)
-    const mapData = readMap(map);
-    const mapInfo = checkValue(mapData);
-    renderMap(map, mapInfo, playerLocation);
-}
-let stage = 0;
-const map1 = [["#####"], ["#OoP#"], ["#####"]];
-const map2 = [["  #######  "], ["###  O  ###"], ["#    o    #"], ["# Oo P oO #"], ["###  o  ###"], [" #   O  #  "], [" ########  "]];
-
-main(map1);
-main(map2);
+startGame()
